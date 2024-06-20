@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+<title>{% block title %}PowerFlex CSI Helper{% endblock %}</title>
+{% block content %}
+<body>
+	<main class="container">
+		<section id="job-details">
+			<h1>Job details: {{job.endpoint}}</h1>
+			<h2>{{job.status}}</h2>
+			<code>{{job.output}}</code>
+			
+		</section>
+	</main>
+</body>
+{% endblock %}

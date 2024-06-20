@@ -1,0 +1,38 @@
+---
+- name: Generate config files
+  hosts: localhost
+  connection: local
+  vars:
+    verifycert: False
+  collections:
+    - dellemc.powerflex
+  tasks:
+  - name: Display all variables and values
+    debug:
+      var: gateway_host
+  - name: Get detailed list of PowerFlex Entities
+    dellemc.powerflex.info:
+      hostname: "{{ gateway_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      verifycert: "{{ verifycert }}"
+    register: powerflex_info
+  - debug:
+      var: subset_result
+  - name: Generate main config file
+    template:
+      src: templates/secret.yaml.j2
+      dest: secret.yaml
+      mode: '0644'
+      #  - name: Generate storage class
+      #template:
+      #src: templates/storageclass.yaml.j2
+      #dest: storageclass.yaml
+      #mode: '0644'
+  - name: Create archive
+    archive:
+      path: 
+      - secret.yaml 
+      - storageclass.yaml 
+      dest: "config-{{gateway_host}}.zip"
+      format: zip

@@ -1,0 +1,27 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  IMAGE: quay.io/coulof/csi-powerflex-helper:latest
+  # Can be `docker` or `podman`
+  DOCKER: docker
+
+tasks:
+  build:
+    cmds:
+      - docker build -t {{ .IMAGE }} .
+
+  push:
+    cmds:
+      - docker push {{ .IMAGE }}
+
+  run:
+    cmds:
+      - docker run -p 5000:5000 {{ .IMAGE }}
+
+  test-ansible:
+    cmds:
+      - |
+        ansible-playbook playbooks/gather-facts-and-generate-config.yaml
+        -e "gateway_host=$PFX_GATEWAY port=443 username=admin password=$PFX_PASSWORD"

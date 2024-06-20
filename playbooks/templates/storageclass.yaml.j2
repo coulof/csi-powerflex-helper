@@ -1,0 +1,23 @@
+# More example available in : https://github.com/dell/csi-powerflex/tree/main/samples
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: powerflex
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: csi-vxflexos.dellemc.com
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+parameters:
+  storagepool: '{{ storagepool }}'
+  systemID: '{{ systemid }}'
+  csi.storage.k8s.io/fstype: ext4
+volumeBindingMode: Immediate
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: powerflex-snapclass
+driver: csi-vxflexos.dellemc.com
+deletionPolicy: Delete
